@@ -1,0 +1,22 @@
+#!/bin/bash
+
+:> ex4.log
+:> tmp.log
+
+for pid in $(ps -A -o pid)
+do
+	ppid=$(grep -h -s -i 'ppid' "/proc/$pid/status" | awk '{print $2}')
+	sum=$(grep -h -s -i 'sum_exec_runtime' "/proc/$pid/sched" | awk '{print $3}')
+	nr=$(grep -h -s -i 'nr_switches' "/proc/$pid/sched" | awk '{print $3}')
+	if [[ -n $nr ]]
+	then
+	art=$(echo "$sum / $nr" | bc -l)
+	fi
+	if [[ -n $ppid ]]
+	then
+	echo "$pid $ppid $art" >> tmp.log
+	fi
+done
+
+sort -n -k 2 tmp.log | awk '
+{print "ProcessID="$1 ": ParentProcessID="$2 ": AverageRunnigTime="$3}' >> ex4.log

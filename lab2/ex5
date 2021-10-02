@@ -1,0 +1,35 @@
+#!/bin/bash
+
+:> ex5.log
+sort -n -k 2 tmp.log > tmp2.log
+
+old_ppid=0
+sum_art=0
+count_ppid=0
+
+while read -r line
+do
+	ppid=$(echo "$line" | awk '{print $2}')
+	art=$(echo "$line" | awk '{print $3}')
+	if [[ -n $ppid ]]
+	then
+		if [[ $ppid -eq $old_ppid ]]
+		then
+			sum_art=$(echo "$sum_art + $art" | bc -l)
+			count_pid=$(echo "$count_ppid + 1" | bc -l)
+			echo "$line" | awk '
+			{print "ProcessID="$1 "Parent_ProcessID="$2 "Average_Running_Time="$3}' >> ex5.log
+		else
+			average_art=$(echo "$sum_art / $count_pid" | bc -l)
+			echo "Average_Running_Children_of_ParentID=$ppid is $average_art" >> ex5.log
+			echo "$line" | awk '
+			{print "Process_ID="$1 "Parent_Process_ID="$2 "Average_Running_Time="$3}' >> ex5.log
+			old_ppid=$ppid
+			sum_art=$art
+			count_pid=1
+		fi
+	fi
+done < tmp2.log
+
+average_art=$(echo "$sum_art / $count_pid" | bc -l)
+echo "Average_Running_Children_of_ParentID=$ppid is $average_art" >> ex5.log

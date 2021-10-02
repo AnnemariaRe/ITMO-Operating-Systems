@@ -1,0 +1,37 @@
+#!/bin/bash
+
+start=()
+end=()
+pids=()
+cmdline=()
+
+for pid in $(ps -Ao pid)
+do
+	if [[ -r /proc/$pid/io ]]
+	then
+		start[$pid]=$(grep "rchar" /proc/$pid/io | awk '{print $2}')
+		pids[$pid]=$pid
+		cmdline[$pid]=$(cat /proc/$pid/cmdline | tr -d '\0')
+	fi
+done
+
+sleep 10
+
+for pid in "${pids[@]}"
+do
+	if [[ -r /proc/$pid/io ]]
+	then
+		end[$pid]=$(grep "rchar" /proc/$pid/io | awk '{print $2}')
+	fi
+done
+
+:> ex7.log
+diff=0
+
+for pid in "${pids[@]}"
+do
+	diff=$( echo "${end[$pid]} - ${start[$pid]}" | bc)
+	echo "$pid $diff ${cmdline[$pid]}" >> ex7.log
+done
+
+sort -n -r -k 2 ex7.log | head -3 | awk '{print $1":"$2":"$3}'

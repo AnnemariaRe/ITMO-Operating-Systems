@@ -1,0 +1,19 @@
+#!/bin/bash
+
+max=0
+max_pid=0
+
+for pid in $(ps -Ao pid)
+do
+	if [[ -r /proc/$pid/status ]]
+	then
+		mem=$(grep "VmHWM" /proc/$pid/status | awk '{print $2}')
+		if [[ $mem -gt $max ]]
+		then
+				max=$mem
+				max_pid=$pid
+		fi
+	fi
+done
+
+echo $max_pid $max

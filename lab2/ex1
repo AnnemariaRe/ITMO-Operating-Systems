@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ps -U user -eo pid,cmd | awk '{printf("%s:%s\n", $1, $2)}' > tmp.log
+wc -l tmp.log | awk '{printf("%s\n", $1)}' > ex1.log
+cat tmp.log >> ex1.log
+

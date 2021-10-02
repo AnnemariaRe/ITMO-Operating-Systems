@@ -1,0 +1,10 @@
+#!/bin/bash
+
+arr=()
+counter=0
+
+while true 
+do
+	arr[$counter]=$counter
+	counter=$(( $counter+1 ))
+done
