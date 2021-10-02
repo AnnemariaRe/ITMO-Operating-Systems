@@ -1,0 +1,5 @@
+#!/bin/bash
+
+find "/var/log" -name '*.log' -type f | xargs cat | wc -l
+
+exit

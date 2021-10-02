@@ -1,0 +1,6 @@
+#!/bin/bash
+
+grep -h "^.*[[:blank:]]INFO" /var/log/anaconda/syslog > info.log
+
+exit
+

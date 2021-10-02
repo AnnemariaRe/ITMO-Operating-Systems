@@ -1,0 +1,33 @@
+#!/bin/bash
+
+echo "Menu:"
+echo "1 - nano"
+echo "2 - vi"
+echo "3 - links"
+echo "4 - exit"
+
+read command
+
+case $command in
+1)
+	echo "Opening nano"
+	nano
+	;;
+2)
+	echo "Opening vi"
+	vi
+	;;
+3)
+	echo "Opening browser"
+	links
+	;;
+4)
+	echo "Exiting"
+	exit
+	;;
+*)
+	echo "Wrong command :("
+	read command
+esac
+
+

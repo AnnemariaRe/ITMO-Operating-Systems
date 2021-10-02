@@ -1,0 +1,15 @@
+#1/bin/bash
+
+string=""
+result=""
+
+while [[ "$string" != "q" ]]
+do
+	result="$result$string"
+	read string
+done
+
+echo "$result"
+exit	
+
+
